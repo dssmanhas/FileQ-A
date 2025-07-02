@@ -64,6 +64,7 @@ def main():
         file_paths = []
 
         # Save each uploaded file once and store its path
+        all_chunks = []
         for uploaded_file in uploaded_files:
             file_path = save_file(uploaded_file)
             file_paths.append(file_path)
@@ -71,18 +72,23 @@ def main():
             doc_hashes.append(doc_id)
 
             # Check if already embedded
-            doc_db_path = os.path.join(CHROMA_DIR, doc_id)
-            if os.path.exists(doc_db_path):
-                st.info(f"✅ {uploaded_file.name} already indexed. Loading from DB.")
-            else:
-                st.info(f"📄 Processing {uploaded_file.name}...")
-                docs = load_document(file_path)
-                splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=200)
-                chunks = splitter.split_documents(docs)
-                st.info(f"📌 Storing vectors for {uploaded_file.name}...")
-                vectordb = Chroma.from_documents(chunks, embedding=embeddings, persist_directory=doc_db_path)
-                vectordb.persist()
-
+            # doc_db_path = os.path.join(CHROMA_DIR, doc_id)
+            # if os.path.exists(doc_db_path):
+            #     st.info(f"✅ {uploaded_file.name} already indexed. Loading from DB.")
+            # else:
+            #     st.info(f"📄 Processing {uploaded_file.name}...")
+            #     docs = load_document(file_path)
+            #     splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=200)
+            #     chunks = splitter.split_documents(docs)
+            #     st.info(f"📌 Storing vectors for {uploaded_file.name}...")
+            #     vectordb = Chroma.from_documents(chunks, embedding=embeddings, persist_directory=doc_db_path)
+            #     vectordb.persist()
+            # Just process and split the documents, do NOT use Chroma
+            st.info(f"📄 Processing {uploaded_file.name}...")
+            docs = load_document(file_path)
+            splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=200)
+            chunks = splitter.split_documents(docs)
+            all_chunks.extend(chunks)
         # Now process all files using the stored file paths
         all_chunks = []
         for file_path in file_paths:
