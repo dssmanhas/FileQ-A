@@ -1,0 +1,9 @@
+streamlit
+langchain
+langchain-community
+transformers
+torch
+sentence-transformers
+pypdf
+pdf2image
+pytesseract

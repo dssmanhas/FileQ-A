@@ -1,0 +1,8 @@
+uploaded_docs/
+chroma_db/
+*.bin
+*.safetensors
+*.pt
+*.ckpt
+__pycache__/
+offload/
