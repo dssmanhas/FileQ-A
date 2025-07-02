@@ -96,7 +96,16 @@ def main():
             splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=200)
             chunks = splitter.split_documents(docs)
             all_chunks.extend(chunks)
-
+        if all_chunks:
+            if st.button("Summarize All Documents"):
+                with st.spinner("Summarizing..."):
+                    full_text = " ".join([chunk.page_content for chunk in all_chunks])
+                    summary_input = full_text[:2000]  # adjust length as needed
+                    summary = llm_pipeline()(
+                        summary_input
+                    )[0]['generated_text']
+                    st.markdown("### 📄 Document Summary")
+                    st.write(summary)
        # vectordb = Chroma.from_documents(all_chunks, embedding=embeddings, persist_directory=CHROMA_DIR)
         vectordb = FAISS.from_documents(all_chunks, embedding=embeddings)
         #vectordb.persist()
