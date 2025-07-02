@@ -7,3 +7,4 @@ sentence-transformers
 pypdf
 pdf2image
 pytesseract
+chromadb
