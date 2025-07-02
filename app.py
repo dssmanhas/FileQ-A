@@ -99,7 +99,7 @@ def main():
 
        # vectordb = Chroma.from_documents(all_chunks, embedding=embeddings, persist_directory=CHROMA_DIR)
         vectordb = FAISS.from_documents(all_chunks, embedding=embeddings)
-        vectordb.persist()
+        #vectordb.persist()
         retriever = vectordb.as_retriever()
         llm = llm_pipeline()
 
