@@ -9,6 +9,7 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
 import tempfile, os, hashlib
 import torch
 from langchain_community.vectorstores import FAISS
+from langchain.chains.summarize import load_summarize_chain
 # Define directories
 UPLOAD_DIR = "uploaded_docs"
 CHROMA_DIR = "chroma_db"
@@ -99,11 +100,12 @@ def main():
         if all_chunks:
             if st.button("Summarize All Documents"):
                 with st.spinner("Summarizing..."):
-                    full_text = " ".join([chunk.page_content for chunk in all_chunks])
-                    summary_input = full_text[:2000]  # adjust length as needed
-                    summary = llm_pipeline()(
-                        summary_input
-                    )[0]['generated_text']
+                    llm = llm_pipeline()
+                    summarize_chain = load_summarize_chain(
+                        llm=llm,
+                        chain_type="map_reduce"
+                    )
+                    summary = summarize_chain.run(all_chunks)
                     st.markdown("### 📄 Document Summary")
                     st.write(summary)
        # vectordb = Chroma.from_documents(all_chunks, embedding=embeddings, persist_directory=CHROMA_DIR)
