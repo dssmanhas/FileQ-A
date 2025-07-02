@@ -6,3 +6,4 @@ torch
 sentence-transformers
 pypdf
 chromadb
+protobuf<=3.20.3
