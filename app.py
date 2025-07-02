@@ -8,7 +8,7 @@ from langchain_community.llms import HuggingFacePipeline
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
 import tempfile, os, hashlib
 import torch
-
+from langchain_community.vectorstores import FAISS
 # Define directories
 UPLOAD_DIR = "uploaded_docs"
 CHROMA_DIR = "chroma_db"
@@ -91,7 +91,8 @@ def main():
             chunks = splitter.split_documents(docs)
             all_chunks.extend(chunks)
 
-        vectordb = Chroma.from_documents(all_chunks, embedding=embeddings, persist_directory=CHROMA_DIR)
+       # vectordb = Chroma.from_documents(all_chunks, embedding=embeddings, persist_directory=CHROMA_DIR)
+        vectordb = FAISS.from_documents(all_chunks, embedding=embeddings)
         vectordb.persist()
         retriever = vectordb.as_retriever()
         llm = llm_pipeline()
