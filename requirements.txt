@@ -5,6 +5,4 @@ transformers
 torch
 sentence-transformers
 pypdf
-pdf2image
-pytesseract
 chromadb
